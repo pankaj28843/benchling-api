@@ -151,7 +151,7 @@ class BenchlingAPI(object):
 
     @Verbose()
     def patch_sequence(self, name=None, bases=None, circular=None,
-                       folder=None, description=None, color=None, aliases=None):
+                       folder=None, description=None, color=None, aliases=None, tags=None):
         payload = {
             'name': name,
             'aliases': aliases,
@@ -159,7 +159,8 @@ class BenchlingAPI(object):
             'bases': bases,
             'circular': circular,
             'folder': folder,
-            'color': color
+            'color': color,
+            'tags': tags
         }
         self._clean_dictionary(payload)
         return self._patch('sequences/{}'.format(id))
