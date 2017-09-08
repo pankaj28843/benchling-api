@@ -1,0 +1,272 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>BenchlingAPI documentation &#8212; BenchlingAPI 0.9.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.9.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="benchlingapi-documentation">
+<h1>BenchlingAPI documentation<a class="headerlink" href="#benchlingapi-documentation" title="Permalink to this headline">¶</a></h1>
+<p>BenchlingAPI is a python3 wrapper for making Benchling requests.</p>
+<p>Requirements:</p>
+<ul class="simple">
+<li>python3</li>
+<li>Benchling API key</li>
+</ul>
+<p>Features:</p>
+<p>Installation:</p>
+<div class="toctree-wrapper compound">
+</div>
+</div>
+<div class="section" id="module-benchlingapi">
+<span id="code"></span><h1>Code<a class="headerlink" href="#module-benchlingapi" title="Permalink to this headline">¶</a></h1>
+<dl class="exception">
+<dt id="benchlingapi.AquariumLoginError">
+<em class="property">exception </em><code class="descclassname">benchlingapi.</code><code class="descname">AquariumLoginError</code><a class="reference internal" href="_modules/benchlingapi.html#AquariumLoginError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchlingapi.AquariumLoginError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Errors for incorrect Aquarium login credentials</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="benchlingapi.BenchlingAPI">
+<em class="property">class </em><code class="descclassname">benchlingapi.</code><code class="descname">BenchlingAPI</code><span class="sig-paren">(</span><em>api_key</em>, <em>home='https://api.benchling.com/v1/'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchlingapi.html#BenchlingAPI"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchlingapi.BenchlingAPI" title="Permalink to this definition">¶</a></dt>
+<dd><p>Connects to BenchlingAPI</p>
+<dl class="method">
+<dt id="benchlingapi.BenchlingAPI.filter_folders">
+<code class="descname">filter_folders</code><span class="sig-paren">(</span><em>fields</em>, <em>regex=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchlingapi.html#BenchlingAPI.filter_folders"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchlingapi.BenchlingAPI.filter_folders" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filters folders based on a set of fields. Can search for
+regular expressions if requested. Uses the cached data stored in the api object.
+:param fields:
+:param regex:
+:return:</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="benchlingapi.BenchlingAPI.filter_sequences">
+<code class="descname">filter_sequences</code><span class="sig-paren">(</span><em>fields</em>, <em>regex=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchlingapi.html#BenchlingAPI.filter_sequences"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchlingapi.BenchlingAPI.filter_sequences" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filters sequences based on a set of fields. Can search for
+regular expressions if requested. Uses the cached data stored in the api object.
+:param fields:
+:param regex:
+:return:</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="benchlingapi.BenchlingAPI.find_folder">
+<code class="descname">find_folder</code><span class="sig-paren">(</span><em>value</em>, <em>query='name'</em>, <em>regex=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchlingapi.html#BenchlingAPI.find_folder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchlingapi.BenchlingAPI.find_folder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds a folder based on a id, name, or regex+name query
+:param value:
+:param query:
+:param regex:
+:return:</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="benchlingapi.BenchlingAPI.find_sequence">
+<code class="descname">find_sequence</code><span class="sig-paren">(</span><em>value</em>, <em>query='name'</em>, <em>regex=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchlingapi.html#BenchlingAPI.find_sequence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchlingapi.BenchlingAPI.find_sequence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds a sequence based on a id, name, or regex+name query
+:param value:
+:param query:
+:param regex:
+:return:</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="benchlingapi.BenchlingAPI.folder_exists">
+<code class="descname">folder_exists</code><span class="sig-paren">(</span><em>value</em>, <em>query='name'</em>, <em>regex=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchlingapi.html#BenchlingAPI.folder_exists"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchlingapi.BenchlingAPI.folder_exists" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether a Benchling folder already exists
+:param value:
+:param query:
+:param regex:
+:return:</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="benchlingapi.BenchlingAPI.get_sequence">
+<code class="descname">get_sequence</code><span class="sig-paren">(</span><em>seq_id</em>, <em>data=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchlingapi.html#BenchlingAPI.get_sequence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchlingapi.BenchlingAPI.get_sequence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a sequence from a sequence id
+:param seq_id:
+:param data:
+:return:</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="benchlingapi.BenchlingAPI.getme">
+<code class="descname">getme</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchlingapi.html#BenchlingAPI.getme"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchlingapi.BenchlingAPI.getme" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the user associated with this api
+:return:</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="benchlingapi.BenchlingAPI.getsequencefromsharelink">
+<code class="descname">getsequencefromsharelink</code><span class="sig-paren">(</span><em>share_link</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchlingapi.html#BenchlingAPI.getsequencefromsharelink"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchlingapi.BenchlingAPI.getsequencefromsharelink" title="Permalink to this definition">¶</a></dt>
+<dd><p>A really hacky way to get a sequence
+from a Benchling share link. Requires you to have
+readable permission on sequence.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>share_link</strong> (<em>str</em>) &#8211; A Benchling share link</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Benchling API sequence information</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="benchlingapi.BenchlingAPI.search">
+<code class="descname">search</code><span class="sig-paren">(</span><em>query</em>, <em>querytype='text'</em>, <em>limit=10</em>, <em>offset=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchlingapi.html#BenchlingAPI.search"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchlingapi.BenchlingAPI.search" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform a Benchling search with text, bases, aminoAcids, or prosite
+:param query:
+:param querytype:
+:param limit:
+:param offset:
+:return:</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="benchlingapi.BenchlingAPI.sequence_exists">
+<code class="descname">sequence_exists</code><span class="sig-paren">(</span><em>value</em>, <em>query='name'</em>, <em>regex=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchlingapi.html#BenchlingAPI.sequence_exists"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchlingapi.BenchlingAPI.sequence_exists" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether a Benchling sequence already exists
+:param value:
+:param query:
+:param regex:
+:return:</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="benchlingapi.BenchlingAPI.update">
+<code class="descname">update</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchlingapi.html#BenchlingAPI.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchlingapi.BenchlingAPI.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates the api dictionaries
+:return:</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="exception">
+<dt id="benchlingapi.BenchlingAPIException">
+<em class="property">exception </em><code class="descclassname">benchlingapi.</code><code class="descname">BenchlingAPIException</code><a class="reference internal" href="_modules/benchlingapi.html#BenchlingAPIException"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchlingapi.BenchlingAPIException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generic Exception for BenchlingAPI</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="benchlingapi.BenchlingLoginError">
+<em class="property">exception </em><code class="descclassname">benchlingapi.</code><code class="descname">BenchlingLoginError</code><a class="reference internal" href="_modules/benchlingapi.html#BenchlingLoginError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchlingapi.BenchlingLoginError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Errors for incorrect login credentials</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="benchlingapi.RequestDecorator">
+<em class="property">class </em><code class="descclassname">benchlingapi.</code><code class="descname">RequestDecorator</code><span class="sig-paren">(</span><em>status_codes</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchlingapi.html#RequestDecorator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchlingapi.RequestDecorator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wraps a function to raise error with unexpected request status codes</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="benchlingapi.UpdateDecorator">
+<em class="property">class </em><code class="descclassname">benchlingapi.</code><code class="descname">UpdateDecorator</code><a class="reference internal" href="_modules/benchlingapi.html#UpdateDecorator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchlingapi.UpdateDecorator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wraps a function to update the benchlingapi dictionary</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="benchlingapi.Verbose">
+<em class="property">class </em><code class="descclassname">benchlingapi.</code><code class="descname">Verbose</code><a class="reference internal" href="_modules/benchlingapi.html#Verbose"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchlingapi.Verbose" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wraps a function to provide verbose mode for debugging requests</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">BenchlingAPI documentation</a></li>
+<li><a class="reference internal" href="#module-benchlingapi">Code</a></li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="#">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/index.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Justin D Vrana.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      
+      |
+      <a href="_sources/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

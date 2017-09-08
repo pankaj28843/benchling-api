@@ -1,0 +1,30 @@
+.. BenchlingAPI documentation master file, created by
+   sphinx-quickstart on Thu Sep  7 18:50:04 2017.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
+
+BenchlingAPI documentation
+========================================
+
+BenchlingAPI is a python3 wrapper for making Benchling requests.
+
+Requirements:
+
+* python3
+* Benchling API key
+
+Features:
+
+Installation:
+
+
+
+.. toctree::
+   :maxdepth: 2
+
+
+Code
+==================
+
+.. automodule:: benchlingapi
+   :members:

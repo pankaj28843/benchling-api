@@ -1,0 +1,749 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>benchlingapi.benchlingapi &#8212; BenchlingAPI 0.9.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.9.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for benchlingapi.benchlingapi</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">urllib.request</span> <span class="k">import</span> <span class="n">urlopen</span>
+<span class="kn">from</span> <span class="nn">bs4</span> <span class="k">import</span> <span class="n">BeautifulSoup</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">import</span> <span class="nn">base64</span>
+
+<div class="viewcode-block" id="BenchlingAPIException"><a class="viewcode-back" href="../../index.html#benchlingapi.benchlingapi.BenchlingAPIException">[docs]</a><span class="k">class</span> <span class="nc">BenchlingAPIException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Generic Exception for BenchlingAPI&quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="BenchlingLoginError"><a class="viewcode-back" href="../../index.html#benchlingapi.benchlingapi.BenchlingLoginError">[docs]</a><span class="k">class</span> <span class="nc">BenchlingLoginError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Errors for incorrect login credentials&quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="AquariumLoginError"><a class="viewcode-back" href="../../index.html#benchlingapi.benchlingapi.AquariumLoginError">[docs]</a><span class="k">class</span> <span class="nc">AquariumLoginError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Errors for incorrect Aquarium login credentials&quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="RequestDecorator"><a class="viewcode-back" href="../../index.html#benchlingapi.benchlingapi.RequestDecorator">[docs]</a><span class="k">class</span> <span class="nc">RequestDecorator</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Wraps a function to raise error with unexpected request status codes</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">status_codes</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">status_codes</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">status_codes</span> <span class="o">=</span> <span class="p">[</span><span class="n">status_codes</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">code</span> <span class="o">=</span> <span class="n">status_codes</span>
+
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">wrapped_f</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="n">args</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+            <span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">home</span><span class="p">,</span> <span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">code</span><span class="p">:</span>
+                <span class="n">http_codes</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="mi">403</span><span class="p">:</span> <span class="s2">&quot;FORBIDDEN&quot;</span><span class="p">,</span>
+                    <span class="mi">404</span><span class="p">:</span> <span class="s2">&quot;NOT FOUND&quot;</span><span class="p">,</span>
+                    <span class="mi">500</span><span class="p">:</span> <span class="s2">&quot;INTERNAL SERVER ERROR&quot;</span><span class="p">,</span>
+                    <span class="mi">503</span><span class="p">:</span> <span class="s2">&quot;SERVICE UNAVAILABLE&quot;</span><span class="p">,</span>
+                    <span class="mi">504</span><span class="p">:</span> <span class="s2">&quot;SERVER TIMEOUT&quot;</span><span class="p">}</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+                <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="ow">in</span> <span class="n">http_codes</span><span class="p">:</span>
+                    <span class="n">msg</span> <span class="o">=</span> <span class="n">http_codes</span><span class="p">[</span><span class="n">r</span><span class="o">.</span><span class="n">status_code</span><span class="p">]</span>
+                <span class="k">raise</span> <span class="n">BenchlingAPIException</span><span class="p">(</span><span class="s2">&quot;HTTP Response Failed </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">r</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="n">msg</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">wrapped_f</span></div>
+
+
+<div class="viewcode-block" id="UpdateDecorator"><a class="viewcode-back" href="../../index.html#benchlingapi.benchlingapi.UpdateDecorator">[docs]</a><span class="k">class</span> <span class="nc">UpdateDecorator</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Wraps a function to update the benchlingapi dictionary</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">wrapped_f</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">_update_dictionaries</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">r</span>
+
+        <span class="k">return</span> <span class="n">wrapped_f</span></div>
+
+
+<div class="viewcode-block" id="Verbose"><a class="viewcode-back" href="../../index.html#benchlingapi.benchlingapi.Verbose">[docs]</a><span class="k">class</span> <span class="nc">Verbose</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Wraps a function to provide verbose mode for debugging requests</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">wrapped_f</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="s1">&#39;started&#39;</span><span class="p">)</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="s1">&#39;ended&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">r</span>
+
+        <span class="k">return</span> <span class="n">wrapped_f</span></div>
+
+
+<span class="c1"># Benchling API Info: https://api.benchling.com/docs/#sequence-sequence-collections-post</span>
+<div class="viewcode-block" id="BenchlingAPI"><a class="viewcode-back" href="../../index.html#benchlingapi.benchlingapi.BenchlingAPI">[docs]</a><span class="k">class</span> <span class="nc">BenchlingAPI</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Connects to BenchlingAPI</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># TODO: Create SQLite Database for sequences</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">api_key</span><span class="p">,</span> <span class="n">home</span><span class="o">=</span><span class="s1">&#39;https://api.benchling.com/v1/&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        BenchlingAPI connector</span>
+<span class="sd">        :param api_key:</span>
+<span class="sd">        :param home:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">home</span> <span class="o">=</span> <span class="n">home</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">auth</span> <span class="o">=</span> <span class="p">(</span><span class="n">api_key</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">seq_dict</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># seq_name: seq_information</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">folder_dict</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># folder_name: folder_information</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">folders</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sequences</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">proteins</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+        <span class="k">except</span> <span class="n">requests</span><span class="o">.</span><span class="n">ConnectionError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">BenchlingLoginError</span><span class="p">(</span><span class="s1">&#39;Benchling login credentials incorrect. Check </span><span class="se">\</span>
+<span class="s1">                BenchlinAPIKey: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">api_key</span><span class="p">))</span>
+
+<div class="viewcode-block" id="BenchlingAPI.update"><a class="viewcode-back" href="../../index.html#benchlingapi.benchlingapi.BenchlingAPI.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Updates the api dictionaries</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_dictionaries</span><span class="p">()</span></div>
+
+    <span class="nd">@RequestDecorator</span><span class="p">([</span><span class="mi">200</span><span class="p">,</span> <span class="mi">201</span><span class="p">,</span> <span class="mi">202</span><span class="p">])</span>
+    <span class="k">def</span> <span class="nf">_post</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">what</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">what</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">auth</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">auth</span><span class="p">)</span>
+
+    <span class="nd">@RequestDecorator</span><span class="p">([</span><span class="mi">200</span><span class="p">,</span> <span class="mi">201</span><span class="p">])</span>
+    <span class="k">def</span> <span class="nf">_patch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">what</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">requests</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="n">what</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">auth</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">auth</span><span class="p">)</span>
+
+    <span class="nd">@RequestDecorator</span><span class="p">(</span><span class="mi">200</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">_get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">what</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">return</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">what</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">auth</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">auth</span><span class="p">)</span>
+
+    <span class="nd">@RequestDecorator</span><span class="p">(</span><span class="mi">200</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">_delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">what</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">requests</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">what</span><span class="p">,</span> <span class="n">auth</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">auth</span><span class="p">)</span>
+
+    <span class="c1"># TODO add request decorator</span>
+    <span class="nd">@RequestDecorator</span><span class="p">(</span><span class="mi">200</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">delete_folder</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Deletes a Benchling folder by id</span>
+<span class="sd">        :param id:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># raise BenchlingAPIException(&quot;Benchling does not yet support deleting folders through the API&quot;)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_delete</span><span class="p">(</span><span class="s1">&#39;folders/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">id</span><span class="p">))</span>
+
+    <span class="nd">@Verbose</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">delete_sequence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Deletes a Benchling sequence by id</span>
+<span class="sd">        :param id:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_delete</span><span class="p">(</span><span class="s1">&#39;sequences/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">id</span><span class="p">))</span>
+        <span class="c1"># TODO: Update dictionaries and lists after delete</span>
+        <span class="k">return</span> <span class="n">d</span>
+
+    <span class="nd">@Verbose</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">patch_folder</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">owner</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">type</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Updates a folder with id</span>
+<span class="sd">        :param name:</span>
+<span class="sd">        :param description:</span>
+<span class="sd">        :param owner:</span>
+<span class="sd">        :param type:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span>
+            <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="n">description</span><span class="p">,</span>
+            <span class="s1">&#39;owner&#39;</span><span class="p">:</span> <span class="n">owner</span><span class="p">,</span>
+            <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="nb">type</span>
+        <span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_clean_dictionary</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_patch</span><span class="p">(</span><span class="s1">&#39;folders/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">id</span><span class="p">))</span>
+
+    <span class="nd">@Verbose</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">patch_sequence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">bases</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                       <span class="n">folder</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">aliases</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Updates a sequence</span>
+<span class="sd">        :param name:</span>
+<span class="sd">        :param bases:</span>
+<span class="sd">        :param circular:</span>
+<span class="sd">        :param folder:</span>
+<span class="sd">        :param description:</span>
+<span class="sd">        :param color:</span>
+<span class="sd">        :param aliases:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span>
+            <span class="s1">&#39;aliases&#39;</span><span class="p">:</span> <span class="n">aliases</span><span class="p">,</span>
+            <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="n">description</span><span class="p">,</span>
+            <span class="s1">&#39;bases&#39;</span><span class="p">:</span> <span class="n">bases</span><span class="p">,</span>
+            <span class="s1">&#39;circular&#39;</span><span class="p">:</span> <span class="n">circular</span><span class="p">,</span>
+            <span class="s1">&#39;folder&#39;</span><span class="p">:</span> <span class="n">folder</span><span class="p">,</span>
+            <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="n">color</span>
+        <span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_clean_dictionary</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_patch</span><span class="p">(</span><span class="s1">&#39;sequences/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">id</span><span class="p">))</span>
+
+    <span class="nd">@Verbose</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">create_folder</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">folder_type</span><span class="o">=</span><span class="s1">&#39;INVENTORY&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a new folder</span>
+<span class="sd">        :param name:</span>
+<span class="sd">        :param description:</span>
+<span class="sd">        :param folder_type:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">payload</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="n">description</span><span class="p">,</span> <span class="n">owner</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">getme</span><span class="p">()[</span><span class="s1">&#39;id&#39;</span><span class="p">],</span> <span class="nb">type</span><span class="o">=</span><span class="n">folder_type</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_clean_dictionary</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_post</span><span class="p">(</span><span class="s1">&#39;folders/&#39;</span><span class="p">,</span> <span class="n">payload</span><span class="p">)</span>
+
+    <span class="c1"># TODO: Add a replace option for creating a sequence with same name at the folder</span>
+    <span class="nd">@Verbose</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">create_sequence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">circular</span><span class="p">,</span> <span class="n">folder</span><span class="p">,</span>
+                        <span class="n">description</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">annotations</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                        <span class="n">aliases</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a new sequences</span>
+<span class="sd">        :param name:</span>
+<span class="sd">        :param bases:</span>
+<span class="sd">        :param circular:</span>
+<span class="sd">        :param folder:</span>
+<span class="sd">        :param description:</span>
+<span class="sd">        :param annotations:</span>
+<span class="sd">        :param aliases:</span>
+<span class="sd">        :param tags:</span>
+<span class="sd">        :param overwrite:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span>
+            <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="n">description</span><span class="p">,</span>
+            <span class="s1">&#39;bases&#39;</span><span class="p">:</span> <span class="n">bases</span><span class="p">,</span>
+            <span class="s1">&#39;circular&#39;</span><span class="p">:</span> <span class="n">circular</span><span class="p">,</span>
+            <span class="s1">&#39;folder&#39;</span><span class="p">:</span> <span class="n">folder</span><span class="p">,</span>
+            <span class="s1">&#39;annotations&#39;</span><span class="p">:</span> <span class="n">annotations</span><span class="p">,</span>
+            <span class="s1">&#39;aliases&#39;</span><span class="p">:</span> <span class="n">aliases</span><span class="p">,</span>
+            <span class="s1">&#39;tags&#39;</span><span class="p">:</span> <span class="n">tags</span>
+        <span class="p">}</span>
+
+        <span class="c1"># Get list of previous sequences</span>
+        <span class="c1"># Delete if overwrite</span>
+        <span class="n">prev_seq_ids</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">seq</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_folder</span><span class="p">(</span><span class="n">folder</span><span class="p">)[</span><span class="s1">&#39;sequences&#39;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">overwrite</span> <span class="ow">and</span> <span class="nb">str</span><span class="p">(</span><span class="n">seq</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">])</span> <span class="o">==</span> <span class="nb">str</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Overwrite on: deleting seq </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">seq</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">delete_sequence</span><span class="p">(</span><span class="n">seq</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">])</span>
+                <span class="n">prev_seq_ids</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">seq</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">])</span>
+
+        <span class="c1"># Post the sequence</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_clean_dictionary</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_post</span><span class="p">(</span><span class="s1">&#39;sequences/&#39;</span><span class="p">,</span> <span class="n">payload</span><span class="p">)</span>
+
+        <span class="c1"># Find the newly created sequence</span>
+        <span class="k">for</span> <span class="n">seq</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_folder</span><span class="p">(</span><span class="n">folder</span><span class="p">)[</span><span class="s1">&#39;sequences&#39;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">seq</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">name</span> <span class="ow">and</span> <span class="n">seq</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">prev_seq_ids</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_sequence</span><span class="p">(</span><span class="n">seq</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">])</span>
+
+        <span class="c1"># Else something wrong happened</span>
+        <span class="k">raise</span> <span class="n">BenchlingAPIException</span><span class="p">(</span><span class="s2">&quot;Unable to return newly created sequence. </span><span class="se">\</span>
+<span class="s2">                Sequence may have been created nevertheless.&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="BenchlingAPI.folder_exists"><a class="viewcode-back" href="../../index.html#benchlingapi.benchlingapi.BenchlingAPI.folder_exists">[docs]</a>    <span class="k">def</span> <span class="nf">folder_exists</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">query</span><span class="o">=</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="n">regex</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Whether a Benchling folder already exists</span>
+<span class="sd">        :param value:</span>
+<span class="sd">        :param query:</span>
+<span class="sd">        :param regex:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">folders</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter_folders</span><span class="p">({</span><span class="n">query</span><span class="p">:</span> <span class="n">value</span><span class="p">},</span> <span class="n">regex</span><span class="o">=</span><span class="n">regex</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">folders</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="BenchlingAPI.sequence_exists"><a class="viewcode-back" href="../../index.html#benchlingapi.benchlingapi.BenchlingAPI.sequence_exists">[docs]</a>    <span class="k">def</span> <span class="nf">sequence_exists</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">query</span><span class="o">=</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="n">regex</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Whether a Benchling sequence already exists</span>
+<span class="sd">        :param value:</span>
+<span class="sd">        :param query:</span>
+<span class="sd">        :param regex:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">sequences</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter_sequences</span><span class="p">({</span><span class="n">query</span><span class="p">:</span> <span class="n">value</span><span class="p">},</span> <span class="n">regex</span><span class="o">=</span><span class="n">regex</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sequences</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_filter</span><span class="p">(</span><span class="n">item_list</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">regex</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Filters a list of dictionaries based on a set</span>
+<span class="sd">        of fields. Can search using regular expressions</span>
+<span class="sd">        if requested. Uses the cached data stored in the api object.</span>
+<span class="sd">        :param item_list:</span>
+<span class="sd">        :param fields:</span>
+<span class="sd">        :param regex:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">filtered_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">item_list</span><span class="p">:</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">regex</span><span class="p">:</span>
+                    <span class="n">g</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">fields</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="n">item</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+                    <span class="k">if</span> <span class="n">g</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="n">a</span> <span class="o">=</span> <span class="kc">False</span>
+                        <span class="k">break</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">item</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">==</span> <span class="n">fields</span><span class="p">[</span><span class="n">key</span><span class="p">]:</span>
+                        <span class="n">a</span> <span class="o">=</span> <span class="kc">False</span>
+                        <span class="k">break</span>
+            <span class="k">if</span> <span class="n">a</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="n">filtered_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">filtered_list</span>
+
+<div class="viewcode-block" id="BenchlingAPI.filter_sequences"><a class="viewcode-back" href="../../index.html#benchlingapi.benchlingapi.BenchlingAPI.filter_sequences">[docs]</a>    <span class="k">def</span> <span class="nf">filter_sequences</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">regex</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Filters sequences based on a set of fields. Can search for</span>
+<span class="sd">        regular expressions if requested. Uses the cached data stored in the api object.</span>
+<span class="sd">        :param fields:</span>
+<span class="sd">        :param regex:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_filter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sequences</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">regex</span><span class="o">=</span><span class="n">regex</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BenchlingAPI.filter_folders"><a class="viewcode-back" href="../../index.html#benchlingapi.benchlingapi.BenchlingAPI.filter_folders">[docs]</a>    <span class="k">def</span> <span class="nf">filter_folders</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">regex</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Filters folders based on a set of fields. Can search for</span>
+<span class="sd">        regular expressions if requested. Uses the cached data stored in the api object.</span>
+<span class="sd">        :param fields:</span>
+<span class="sd">        :param regex:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_filter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">folders</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">regex</span><span class="o">=</span><span class="n">regex</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_find</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">what</span><span class="p">,</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">query</span><span class="o">=</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="n">regex</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Uses the cached data stored in the api object to find the item</span>
+<span class="sd">        :param what:</span>
+<span class="sd">        :param dict:</span>
+<span class="sd">        :param value:</span>
+<span class="sd">        :param query:</span>
+<span class="sd">        :param regex:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">item</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_cached_items</span><span class="p">(</span><span class="nb">dict</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">regex</span><span class="p">,</span> <span class="n">value</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">what</span><span class="p">,</span> <span class="n">item</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]))</span>
+
+    <span class="k">def</span> <span class="nf">_find_cached_items</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">regex</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Uses the cached data stored in teh api object to find items</span>
+<span class="sd">        :param dict:</span>
+<span class="sd">        :param query:</span>
+<span class="sd">        :param regex:</span>
+<span class="sd">        :param value:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">items</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">items</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_filter</span><span class="p">(</span><span class="nb">dict</span><span class="p">,</span> <span class="p">{</span><span class="n">query</span><span class="p">:</span> <span class="n">value</span><span class="p">},</span> <span class="n">regex</span><span class="o">=</span><span class="n">regex</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">BenchlingAPIException</span><span class="p">(</span><span class="s2">&quot;Query </span><span class="si">{}</span><span class="s2"> not understood. Could not find item.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">query</span><span class="p">))</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">items</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">BenchlingAPIException</span><span class="p">(</span><span class="s2">&quot;No items found with </span><span class="si">{}</span><span class="s2"> </span><span class="se">\&#39;</span><span class="si">{}</span><span class="se">\&#39;</span><span class="s2">.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">items</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;More </span><span class="si">{}</span><span class="s2"> items found with </span><span class="si">{}</span><span class="s2"> </span><span class="se">\&#39;</span><span class="si">{}</span><span class="se">\&#39;</span><span class="s2">. Returning first item.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">items</span><span class="p">),</span> <span class="n">query</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">items</span>
+
+<div class="viewcode-block" id="BenchlingAPI.find_sequence"><a class="viewcode-back" href="../../index.html#benchlingapi.benchlingapi.BenchlingAPI.find_sequence">[docs]</a>    <span class="k">def</span> <span class="nf">find_sequence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">query</span><span class="o">=</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="n">regex</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Finds a sequence based on a id, name, or regex+name query</span>
+<span class="sd">        :param value:</span>
+<span class="sd">        :param query:</span>
+<span class="sd">        :param regex:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find</span><span class="p">(</span><span class="s1">&#39;sequences&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sequences</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">query</span><span class="o">=</span><span class="n">query</span><span class="p">,</span> <span class="n">regex</span><span class="o">=</span><span class="n">regex</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BenchlingAPI.find_folder"><a class="viewcode-back" href="../../index.html#benchlingapi.benchlingapi.BenchlingAPI.find_folder">[docs]</a>    <span class="k">def</span> <span class="nf">find_folder</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">query</span><span class="o">=</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="n">regex</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Finds a folder based on a id, name, or regex+name query</span>
+<span class="sd">        :param value:</span>
+<span class="sd">        :param query:</span>
+<span class="sd">        :param regex:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find</span><span class="p">(</span><span class="s1">&#39;folders&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">folders</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">query</span><span class="o">=</span><span class="n">query</span><span class="p">,</span> <span class="n">regex</span><span class="o">=</span><span class="n">regex</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">get_folder</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="s1">&#39;folders/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">id</span><span class="p">))</span>
+
+
+    <span class="k">def</span> <span class="nf">submit_mafft_alignment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seq_id</span><span class="p">,</span> <span class="n">queries</span><span class="p">,</span>
+                               <span class="n">adjust_direction</span><span class="o">=</span><span class="s2">&quot;no&quot;</span><span class="p">,</span>
+                               <span class="n">max_iterations</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                               <span class="n">retree</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                               <span class="n">gap_open_penalty</span><span class="o">=</span><span class="mf">1.53</span><span class="p">,</span>
+                               <span class="n">gap_extension_penalty</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+
+        <span class="n">mafft_options</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">adjust_direction</span><span class="o">=</span><span class="n">adjust_direction</span><span class="p">,</span>
+            <span class="n">max_iterations</span><span class="o">=</span><span class="n">max_iterations</span><span class="p">,</span>
+            <span class="n">retree</span><span class="o">=</span><span class="n">retree</span><span class="p">,</span>
+            <span class="n">gap_open_penalty</span><span class="o">=</span><span class="n">gap_open_penalty</span><span class="p">,</span>
+            <span class="n">gap_extension_penalty</span><span class="o">=</span><span class="n">gap_extension_penalty</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">submit_alignment</span><span class="p">(</span><span class="n">seq_id</span><span class="p">,</span> <span class="n">queries</span><span class="p">,</span> <span class="s1">&#39;mafft&#39;</span><span class="p">,</span> <span class="n">mafft_options</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">submit_clustalo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seq_id</span><span class="p">,</span> <span class="n">queries</span><span class="p">,</span>
+            <span class="n">max_guidetree_iterations</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+            <span class="n">max_hmm_iterations</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span>
+            <span class="n">mbed_guide_tree</span><span class="o">=</span><span class="s2">&quot;yes&quot;</span><span class="p">,</span>
+            <span class="n">mbed_iteration</span><span class="o">=</span><span class="s2">&quot;yes&quot;</span><span class="p">,</span>
+            <span class="n">num_combined_iterations</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+
+        <span class="n">clustalo_options</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">max_guidetree_iterations</span><span class="o">=</span><span class="n">max_guidetree_iterations</span><span class="p">,</span>
+            <span class="n">max_hmm_iterations</span><span class="o">=</span><span class="n">max_hmm_iterations</span><span class="p">,</span>
+            <span class="n">mbed_guide_tree</span><span class="o">=</span><span class="n">mbed_guide_tree</span><span class="p">,</span>
+            <span class="n">mbed_iteration</span><span class="o">=</span><span class="n">mbed_iteration</span><span class="p">,</span>
+            <span class="n">num_combined_iterations</span><span class="o">=</span><span class="n">num_combined_iterations</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">submit_alignment</span><span class="p">(</span><span class="n">seq_id</span><span class="p">,</span> <span class="n">queries</span><span class="p">,</span> <span class="s1">&#39;clustalo&#39;</span><span class="p">,</span> <span class="n">clustalo_options</span><span class="p">)</span>
+
+
+    <span class="k">def</span> <span class="nf">submit_alignment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seq_id</span><span class="p">,</span> <span class="n">queries</span><span class="p">,</span> <span class="n">algorithm</span><span class="p">,</span> <span class="n">algorithm_options</span><span class="p">):</span>
+        <span class="n">files</span> <span class="o">=</span> <span class="p">[{</span><span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="n">seq_id</span><span class="p">}]</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="c1"># if query is a tuple, then the data is already prepared</span>
+        <span class="c1"># else if the query is a string it could be (1) a path to a fasta or ab1 file</span>
+        <span class="c1"># (2) a benchling_sequence_id, or (3) encoded data with no name</span>
+        <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">queries</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
+            <span class="c1"># if the query is a tuple</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+                <span class="n">files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span>
+                    <span class="n">name</span><span class="o">=</span><span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                    <span class="n">data</span><span class="o">=</span><span class="n">q</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="p">))</span>
+            <span class="c1"># if the query is a string</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="c1"># if the query is a Benchling sequence_id</span>
+                <span class="k">if</span> <span class="n">q</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;seq&#39;</span><span class="p">):</span>
+                    <span class="n">files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span>
+                        <span class="nb">id</span><span class="o">=</span><span class="n">q</span>
+                    <span class="p">))</span>
+                <span class="c1"># if the query is a file, encode the data</span>
+                <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">q</span><span class="p">):</span>
+                    <span class="n">data64</span><span class="o">=</span><span class="kc">None</span>
+                    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">q</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                        <span class="n">data64</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+                    <span class="n">files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span>
+                        <span class="n">name</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">q</span><span class="p">),</span>
+                        <span class="n">data</span><span class="o">=</span><span class="n">data64</span>
+                    <span class="p">))</span>
+                <span class="c1"># else, the data is already encoded and needs a name</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span>
+                        <span class="n">name</span><span class="o">=</span><span class="s1">&#39;untitled_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">),</span>
+                        <span class="n">data</span><span class="o">=</span><span class="n">q</span>
+                    <span class="p">))</span>
+                    <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;algorithm&quot;</span><span class="p">:</span> <span class="n">algorithm</span><span class="p">,</span>
+            <span class="s2">&quot;algorithmOptions&quot;</span><span class="p">:</span> <span class="n">algorithm_options</span><span class="p">,</span>
+            <span class="s2">&quot;files&quot;</span><span class="p">:</span> <span class="n">files</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_post</span><span class="p">(</span><span class="s1">&#39;alignments&#39;</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+
+    <span class="c1"># TODO: submit batched alignments that auto-updates once tasks are complete</span>
+    <span class="k">def</span> <span class="nf">submit_batched_alignment</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">get_task</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task_id</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;tasks&#39;</span><span class="p">,</span> <span class="n">task_id</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">get_alignment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alignment_id</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;alignments&#39;</span><span class="p">,</span> <span class="n">alignment_id</span><span class="p">))</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_clean_annotations</span><span class="p">(</span><span class="n">sequence</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Cleans up the sequence start and end points in the unusual case</span>
+<span class="sd">        where end == 0</span>
+<span class="sd">        :param sequence:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">annotations</span> <span class="o">=</span> <span class="n">sequence</span><span class="p">[</span><span class="s1">&#39;annotations&#39;</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">annotations</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">a</span><span class="p">[</span><span class="s1">&#39;end&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">a</span><span class="p">[</span><span class="s1">&#39;end&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sequence</span><span class="p">[</span><span class="s1">&#39;bases&#39;</span><span class="p">])</span>
+
+<div class="viewcode-block" id="BenchlingAPI.get_sequence"><a class="viewcode-back" href="../../index.html#benchlingapi.benchlingapi.BenchlingAPI.get_sequence">[docs]</a>    <span class="k">def</span> <span class="nf">get_sequence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seq_id</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get a sequence from a sequence id</span>
+<span class="sd">        :param seq_id:</span>
+<span class="sd">        :param data:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">sequence</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="s1">&#39;sequences/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">seq_id</span><span class="p">),</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_clean_annotations</span><span class="p">(</span><span class="n">sequence</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">sequence</span></div>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_clean_dictionary</span><span class="p">(</span><span class="n">dic</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Removes keys whose values are None</span>
+<span class="sd">        :param dic:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">dic</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">dic</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">dic</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">dic</span>
+
+    <span class="k">def</span> <span class="nf">_verifysharelink</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">share_link</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Verifies a share_link is in the correct format</span>
+<span class="sd">        :param share_link:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="s1">&#39;https://benchling.com/s/(\w+)&#39;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">share_link</span><span class="p">)</span>
+        <span class="n">verified</span> <span class="o">=</span> <span class="n">result</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">verified</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;Share link incorrectly formatted. Expected format </span><span class="si">{}</span><span class="s2">. Found </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="s1">&#39;https://benchling.com/s/\w+/edit&#39;</span><span class="p">,</span> <span class="n">share_link</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">BenchlingAPIException</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_opensharelink</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">share_link</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Hacky way to read the contents of a Benchling share link</span>
+<span class="sd">        :param share_link:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_verifysharelink</span><span class="p">(</span><span class="n">share_link</span><span class="p">)</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">urlopen</span><span class="p">(</span><span class="n">share_link</span><span class="p">)</span>
+        <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">(),</span> <span class="s2">&quot;lxml&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">soup</span>
+
+    <span class="k">def</span> <span class="nf">_getsequenceidfromsharelink</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">share_link</span><span class="p">):</span>
+        <span class="n">seq</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">soup</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_opensharelink</span><span class="p">(</span><span class="n">share_link</span><span class="p">)</span>
+            <span class="n">search_pattern</span> <span class="o">=</span> <span class="s2">&quot;seq_\w+&quot;</span>
+            <span class="n">possible_ids</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">search_pattern</span><span class="p">,</span> <span class="n">soup</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">possible_ids</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">BenchlingAPIException</span><span class="p">(</span><span class="s2">&quot;No sequence ids found in sharelink html using search pattern </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="n">search_pattern</span><span class="p">))</span>
+            <span class="n">uniq_ids</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">possible_ids</span><span class="p">))</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">uniq_ids</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">BenchlingAPIException</span><span class="p">(</span><span class="s2">&quot;More than one possible sequence id found in sharelink html using search &quot;</span>
+                                      <span class="s2">&quot;pattern </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">search_pattern</span><span class="p">))</span>
+            <span class="n">seq</span> <span class="o">=</span> <span class="n">uniq_ids</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">except</span> <span class="n">BenchlingAPIException</span><span class="p">:</span>
+            <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parseURL</span><span class="p">(</span><span class="n">share_link</span><span class="p">)</span>
+            <span class="n">seq</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;seq_id&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">seq</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">BenchlingAPIException</span><span class="p">(</span><span class="s2">&quot;Could not find seqid in sharelink body or url.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">seq</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_parseURL</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        A really hacky way to parse the Benchling api. This may become unstable.</span>
+<span class="sd">        :param url:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">g</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s1">&#39;benchling.com/(?P&lt;user&gt;\w+)/f/(?P&lt;folderid&gt;\w+)&#39;</span> <span class="o">+</span> \
+                      <span class="s1">&#39;-(?P&lt;foldername&gt;\w+)/seq-(?P&lt;seqid&gt;\w+)-(?P&lt;seqname&gt;&#39;</span> <span class="o">+</span> \
+                      <span class="s1">&#39;[a-zA-Z0-9_-]+)&#39;</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span>
+        <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;user&#39;</span><span class="p">,</span> <span class="s1">&#39;folder_id&#39;</span><span class="p">,</span> <span class="s1">&#39;folder_name&#39;</span><span class="p">,</span> <span class="s1">&#39;seq_id&#39;</span><span class="p">,</span> <span class="s1">&#39;seq_name&#39;</span><span class="p">]</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">g</span><span class="o">.</span><span class="n">groups</span><span class="p">())))</span>
+        <span class="n">d</span><span class="p">[</span><span class="s1">&#39;seq_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;seq_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;seq_id&#39;</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">d</span>
+
+<div class="viewcode-block" id="BenchlingAPI.getsequencefromsharelink"><a class="viewcode-back" href="../../index.html#benchlingapi.benchlingapi.BenchlingAPI.getsequencefromsharelink">[docs]</a>    <span class="k">def</span> <span class="nf">getsequencefromsharelink</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">share_link</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; A really hacky way to get a sequence</span>
+<span class="sd">        from a Benchling share link. Requires you to have</span>
+<span class="sd">        readable permission on sequence.</span>
+
+<span class="sd">        :param share_link: A Benchling share link</span>
+<span class="sd">        :type share_link: str</span>
+<span class="sd">        :returns: Benchling API sequence information</span>
+<span class="sd">        :rtype: dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_getsequenceidfromsharelink</span><span class="p">(</span><span class="n">share_link</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_sequence</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BenchlingAPI.getme"><a class="viewcode-back" href="../../index.html#benchlingapi.benchlingapi.BenchlingAPI.getme">[docs]</a>    <span class="k">def</span> <span class="nf">getme</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets the user associated with this api</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="s1">&#39;entities/me&#39;</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Clears the api cache</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">folders</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sequences</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">seq_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">folder_dict</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">def</span> <span class="nf">_updatelistsfromdictionaries</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">folders</span><span class="p">:</span>
+            <span class="n">seqs</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="s1">&#39;sequences&#39;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">f</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">folder_dict</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">folder_dict</span><span class="p">[</span><span class="n">f</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">folder_dict</span><span class="p">[</span><span class="n">f</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">seqs</span><span class="p">:</span>
+                <span class="n">s</span><span class="p">[</span><span class="s1">&#39;folder&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">s</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sequences</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">sequences</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">s</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">seq_dict</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">seq_dict</span><span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">seq_dict</span><span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_update_dictionaries</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Updates the dictionary cache for the api</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_clear</span><span class="p">()</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="s1">&#39;folders&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s1">&#39;error&#39;</span> <span class="ow">in</span> <span class="n">r</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">requests</span><span class="o">.</span><span class="n">ConnectionError</span><span class="p">(</span><span class="s1">&#39;Benchling Authentication Required. Check your Benchling API key.&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">folders</span> <span class="o">=</span> <span class="n">r</span><span class="p">[</span><span class="s1">&#39;folders&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_updatelistsfromdictionaries</span><span class="p">()</span>
+
+<div class="viewcode-block" id="BenchlingAPI.search"><a class="viewcode-back" href="../../index.html#benchlingapi.benchlingapi.BenchlingAPI.search">[docs]</a>    <span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">querytype</span><span class="o">=</span><span class="s1">&#39;text&#39;</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Perform a Benchling search with text, bases, aminoAcids, or prosite</span>
+<span class="sd">        :param query:</span>
+<span class="sd">        :param querytype:</span>
+<span class="sd">        :param limit:</span>
+<span class="sd">        :param offset:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_post</span><span class="p">(</span><span class="s1">&#39;search&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;query&#39;</span><span class="p">:</span> <span class="n">query</span><span class="p">,</span> <span class="s1">&#39;queryType&#39;</span><span class="p">:</span> <span class="n">querytype</span><span class="p">,</span> <span class="s1">&#39;limit&#39;</span><span class="p">:</span> <span class="n">limit</span><span class="p">,</span> <span class="s1">&#39;offset&#39;</span><span class="p">:</span> <span class="n">offset</span><span class="p">})</span></div></div>
+
+
+        <span class="c1"># TODO Add protein functions</span>
+        <span class="c1"># TODO add alignment functions?</span>
+        <span class="c1"># TODO add task functions</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  <li><a href="../benchlingapi.html">benchlingapi</a><ul>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Justin D Vrana.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
