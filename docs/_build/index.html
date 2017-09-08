@@ -44,15 +44,41 @@
   <div class="section" id="benchlingapi-documentation">
 <h1>BenchlingAPI documentation<a class="headerlink" href="#benchlingapi-documentation" title="Permalink to this headline">¶</a></h1>
 <p>BenchlingAPI is a python3 wrapper for making Benchling requests.</p>
-<p>Requirements:</p>
+<p><strong>Requirements:</strong></p>
 <ul class="simple">
-<li>python3</li>
-<li>Benchling API key</li>
+<li>Python3</li>
+<li>A Benchling API key (<a class="reference external" href="https://api.benchling.com/docs/">https://api.benchling.com/docs/</a>)</li>
 </ul>
-<p>Features:</p>
-<p>Installation:</p>
+<p><strong>Features:</strong></p>
+<ul class="simple">
+<li>Accessing Benchling sequences and folders</li>
+<li>Creating new sequences and folders</li>
+<li>Searching through sequences and folders using regular expressions</li>
+<li>Converting Benchling sequence JSON to genbank or FASTA files</li>
+<li>Opening and accessing sequences in a Benchling Share links</li>
+</ul>
+<p><strong>Installation:</strong></p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">directory</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">benchlingapi</span>
+<span class="n">pip</span> <span class="n">install</span> <span class="o">.</span>
+</pre></div>
+</div>
+<p><strong>Initialization and usage:</strong></p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">benchlingapi</span> <span class="kn">import</span> <span class="n">BenchlingAPI</span>
+
+<span class="n">api_key</span> <span class="o">=</span> <span class="s2">&quot;asdgkjahga7dgsd9g8sadg&quot;</span>
+<span class="n">api</span> <span class="o">=</span> <span class="n">BenchlingAPI</span><span class="p">(</span><span class="n">api_key</span><span class="p">)</span>
+<span class="n">seq</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">sequences</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="c1"># get metadata of first sequence</span>
+<span class="n">api</span><span class="o">.</span><span class="n">get_sequence</span><span class="p">(</span><span class="n">seq</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
 <div class="toctree-wrapper compound">
 </div>
+<p><strong>File Types</strong></p>
+<p>Examples:</p>
+<ul class="simple">
+<li>Example Benchling folder JSON <a class="reference download internal" href="_downloads/example_folder.json" download=""><code class="xref download docutils literal"><span class="pre">folder.json</span></code></a>.</li>
+<li>Example Benchling sequence JSON <a class="reference download internal" href="_downloads/example_sequence.json" download=""><code class="xref download docutils literal"><span class="pre">folder.json</span></code></a>.</li>
+</ul>
 </div>
 <div class="section" id="module-benchlingapi">
 <span id="code"></span><h1>Code<a class="headerlink" href="#module-benchlingapi" title="Permalink to this headline">¶</a></h1>
@@ -70,83 +96,194 @@
 <dt id="benchlingapi.BenchlingAPI.filter_folders">
 <code class="descname">filter_folders</code><span class="sig-paren">(</span><em>fields</em>, <em>regex=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchlingapi.html#BenchlingAPI.filter_folders"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchlingapi.BenchlingAPI.filter_folders" title="Permalink to this definition">¶</a></dt>
 <dd><p>Filters folders based on a set of fields. Can search for
-regular expressions if requested. Uses the cached data stored in the api object.
-:param fields:
-:param regex:
-:return:</p>
+regular expressions if requested. Uses the cached data stored in the api object.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>fields</strong> (<em>dict</em>) &#8211; fields to filter by</li>
+<li><strong>regex</strong> (<em>bool</em>) &#8211; whether to use regular expressions</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">list of sequences</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="benchlingapi.BenchlingAPI.filter_sequences">
 <code class="descname">filter_sequences</code><span class="sig-paren">(</span><em>fields</em>, <em>regex=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchlingapi.html#BenchlingAPI.filter_sequences"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchlingapi.BenchlingAPI.filter_sequences" title="Permalink to this definition">¶</a></dt>
 <dd><p>Filters sequences based on a set of fields. Can search for
-regular expressions if requested. Uses the cached data stored in the api object.
-:param fields:
-:param regex:
-:return:</p>
+regular expressions if requested. Uses the cached data stored in the api object.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>fields</strong> (<em>dict</em>) &#8211; fields to filter by</li>
+<li><strong>regex</strong> (<em>bool</em>) &#8211; whether to use regular expressions</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">list of folders</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="benchlingapi.BenchlingAPI.find_folder">
 <code class="descname">find_folder</code><span class="sig-paren">(</span><em>value</em>, <em>query='name'</em>, <em>regex=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchlingapi.html#BenchlingAPI.find_folder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchlingapi.BenchlingAPI.find_folder" title="Permalink to this definition">¶</a></dt>
-<dd><p>Finds a folder based on a id, name, or regex+name query
-:param value:
-:param query:
-:param regex:
-:return:</p>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>value</strong> (<em>str</em><em> or </em><em>int</em>) &#8211; value to search for</li>
+<li><strong>query</strong> (<em>str</em><em> or </em><em>int</em>) &#8211; &#8220;name&#8221; or &#8220;id&#8221;</li>
+<li><strong>regex</strong> (<em>str</em>) &#8211; whether to use regular expressions or not</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">folder JSON</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="benchlingapi.BenchlingAPI.find_sequence">
 <code class="descname">find_sequence</code><span class="sig-paren">(</span><em>value</em>, <em>query='name'</em>, <em>regex=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchlingapi.html#BenchlingAPI.find_sequence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchlingapi.BenchlingAPI.find_sequence" title="Permalink to this definition">¶</a></dt>
-<dd><p>Finds a sequence based on a id, name, or regex+name query
-:param value:
-:param query:
-:param regex:
-:return:</p>
+<dd><p>Find sequences based on a query</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>value</strong> (<em>str</em><em> or </em><em>int</em>) &#8211; value to search for</li>
+<li><strong>query</strong> (<em>str</em><em> or </em><em>int</em>) &#8211; str or int</li>
+<li><strong>regex</strong> (<em>str</em>) &#8211; whether to use regular expressions or not</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">sequence JSON</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="benchlingapi.BenchlingAPI.folder_exists">
 <code class="descname">folder_exists</code><span class="sig-paren">(</span><em>value</em>, <em>query='name'</em>, <em>regex=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchlingapi.html#BenchlingAPI.folder_exists"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchlingapi.BenchlingAPI.folder_exists" title="Permalink to this definition">¶</a></dt>
-<dd><p>Whether a Benchling folder already exists
-:param value:
-:param query:
-:param regex:
-:return:</p>
+<dd><p>Checks if folder is in the api cache.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>value</strong> (<em>str</em><em> or </em><em>int</em>) &#8211; value to search for</li>
+<li><strong>query</strong> (<em>str</em><em> or </em><em>int</em>) &#8211; &#8220;name&#8221; or &#8220;id&#8221;</li>
+<li><strong>regex</strong> (<em>str</em>) &#8211; whether to use regular expressions or not</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">whether folder is in api cache</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">bool</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="benchlingapi.BenchlingAPI.get_folder">
+<code class="descname">get_folder</code><span class="sig-paren">(</span><em>id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchlingapi.html#BenchlingAPI.get_folder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchlingapi.BenchlingAPI.get_folder" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>id</strong> (<em>str</em>) &#8211; benchling identifier</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="benchlingapi.BenchlingAPI.get_me">
+<code class="descname">get_me</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchlingapi.html#BenchlingAPI.get_me"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchlingapi.BenchlingAPI.get_me" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the user associated with the api key</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">user JSON</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="benchlingapi.BenchlingAPI.get_sequence">
-<code class="descname">get_sequence</code><span class="sig-paren">(</span><em>seq_id</em>, <em>data=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchlingapi.html#BenchlingAPI.get_sequence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchlingapi.BenchlingAPI.get_sequence" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get a sequence from a sequence id
-:param seq_id:
-:param data:
-:return:</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="benchlingapi.BenchlingAPI.getme">
-<code class="descname">getme</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchlingapi.html#BenchlingAPI.getme"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchlingapi.BenchlingAPI.getme" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets the user associated with this api
-:return:</p>
+<code class="descname">get_sequence</code><span class="sig-paren">(</span><em>id</em>, <em>data=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchlingapi.html#BenchlingAPI.get_sequence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchlingapi.BenchlingAPI.get_sequence" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>id</strong> (<em>str</em>) &#8211; benchling identifier</li>
+<li><strong>data</strong> &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"></p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="benchlingapi.BenchlingAPI.getsequencefromsharelink">
 <code class="descname">getsequencefromsharelink</code><span class="sig-paren">(</span><em>share_link</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchlingapi.html#BenchlingAPI.getsequencefromsharelink"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchlingapi.BenchlingAPI.getsequencefromsharelink" title="Permalink to this definition">¶</a></dt>
-<dd><p>A really hacky way to get a sequence
-from a Benchling share link. Requires you to have
-readable permission on sequence.</p>
-<table class="docutils field-list" frame="void" rules="none">
+<dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>share_link</strong> (<em>str</em>) &#8211; A Benchling share link</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>share_link</strong> &#8211; </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Benchling API sequence information</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"></td>
 </tr>
 </tbody>
 </table>
@@ -155,29 +292,67 @@ readable permission on sequence.</p>
 <dl class="method">
 <dt id="benchlingapi.BenchlingAPI.search">
 <code class="descname">search</code><span class="sig-paren">(</span><em>query</em>, <em>querytype='text'</em>, <em>limit=10</em>, <em>offset=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchlingapi.html#BenchlingAPI.search"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchlingapi.BenchlingAPI.search" title="Permalink to this definition">¶</a></dt>
-<dd><p>Perform a Benchling search with text, bases, aminoAcids, or prosite
-:param query:
-:param querytype:
-:param limit:
-:param offset:
-:return:</p>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>query</strong> (<em>str</em><em> or </em><em>int</em>) &#8211; &#8220;name&#8221; or &#8220;id&#8221;</li>
+<li><strong>querytype</strong> &#8211; </li>
+<li><strong>limit</strong> &#8211; </li>
+<li><strong>offset</strong> &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"></p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="benchlingapi.BenchlingAPI.sequence_exists">
-<code class="descname">sequence_exists</code><span class="sig-paren">(</span><em>value</em>, <em>query='name'</em>, <em>regex=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchlingapi.html#BenchlingAPI.sequence_exists"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchlingapi.BenchlingAPI.sequence_exists" title="Permalink to this definition">¶</a></dt>
-<dd><p>Whether a Benchling sequence already exists
-:param value:
-:param query:
-:param regex:
-:return:</p>
+<code class="descname">sequence_exists</code><span class="sig-paren">(</span><em>value</em>, <em>query='name'</em>, <em>regex=False</em><span class="sig-paren">)</span> &rarr; bool<a class="reference internal" href="_modules/benchlingapi.html#BenchlingAPI.sequence_exists"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchlingapi.BenchlingAPI.sequence_exists" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if sequence is in the api cache.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>value</strong> (<em>str</em><em> or </em><em>int</em>) &#8211; value to search for</li>
+<li><strong>query</strong> (<em>str</em><em> or </em><em>int</em>) &#8211; &#8220;name&#8221; or &#8220;id&#8221;</li>
+<li><strong>regex</strong> (<em>str</em>) &#8211; whether to use regular expressions or not</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">whether sequence is in api cache</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">bool</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="benchlingapi.BenchlingAPI.update">
 <code class="descname">update</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchlingapi.html#BenchlingAPI.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchlingapi.BenchlingAPI.update" title="Permalink to this definition">¶</a></dt>
-<dd><p>Updates the api dictionaries
-:return:</p>
+<dd><p>Updates the api cache</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>

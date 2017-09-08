@@ -34,7 +34,7 @@ def test_search(api):
 def test_gets(api):
     assert len(api.sequences) > 0
     assert len(api.folders) > 0
-    assert len(api.getme()) > 0
+    assert len(api.get_me()) > 0
 
     s = api.get_sequence(api.sequences[0]["id"])
 
@@ -58,11 +58,11 @@ def test_finds(api):
 
 
 def test_create_patch_and_delete_folder(api):
-    pass
+    raise ValueError("Test not implemented")
 
 
 def test_create_patch_and_delete_sequence(api):
-    pass
+    raise ValueError("Test not implemented")
 
 
 def test_alignments(api):
