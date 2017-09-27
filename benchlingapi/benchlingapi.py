@@ -1,5 +1,4 @@
 import base64
-import json
 import os
 import re
 import warnings
@@ -48,7 +47,7 @@ class RequestDecorator(object):
                     msg = http_codes[r.status_code]
                 raise BenchlingAPIException("HTTP Response Failed {} {}".format(
                         r.status_code, msg))
-            return json.loads(r.text)
+            return r.json()
 
         return wrapped_f
 

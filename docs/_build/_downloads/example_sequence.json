@@ -1,1 +1,385 @@
-{"aliases": [], "annotations": [{"color": "#B1FF67", "end": 2137, "name": "GAL4(1-93) DBD", "start": 1859, "strand": 1, "type": "misc_feature"}, {"color": "#FF9CCD", "end": 5600, "name": "pBR322_origin", "start": 4980, "strand": -1, "type": "rep_origin"}, {"color": "#F58A5E", "end": 2405, "name": "Differs from Gottschling Map", "start": 2404, "strand": 1, "type": "misc_feature"}, {"color": "#85DAE9", "end": 3314, "name": "Stop Codon", "start": 3311, "strand": 1, "type": "misc_feature"}, {"color": "#B1FF67", "end": 6615, "name": "Ampicillin", "start": 5754, "strand": -1, "type": "gene"}, {"color": "#85DAE9", "end": 6056, "name": "New Feature", "start": 6029, "strand": 1, "type": "misc_feature"}, {"color": "#85DAE9", "end": 2513, "name": "HSV1 VP16", "start": 2309, "strand": 1, "type": "misc_feature"}, {"color": "#B1FF67", "end": 2543, "name": "L2", "start": 2513, "strand": 1, "type": "misc_feature"}, {"color": "#9EAFD2", "end": 2661, "name": "EGFP_N_primer", "start": 2639, "strand": -1, "type": "misc_feature"}, {"color": "#85DAE9", "end": 510, "name": "HIS3 5' UTR", "start": 198, "strand": 1, "type": "misc_feature"}, {"color": "#9EAFD2", "end": 3269, "name": "EGFP_C_primer", "start": 3247, "strand": 1, "type": "misc_feature"}, {"color": "#602ef3", "end": 6685, "name": "AmpR_promoter", "start": 6656, "strand": -1, "type": "promoter"}, {"color": "#FFEF86", "end": 6615, "name": "Ampicillin", "start": 5754, "strand": -1, "type": "CDS"}, {"color": "#FFEF86", "end": 3311, "name": "ORF frame 2", "start": 2597, "strand": -1, "type": "CDS"}, {"color": "#85DAE9", "end": 1355, "name": "ADH1 Terminator", "start": 1173, "strand": 1, "type": "terminator"}, {"color": "#6c59ff", "end": 2309, "name": "Extra serine, shared by VP16/hER", "start": 2306, "strand": 1, "type": "misc_feature"}, {"color": "#85DAE9", "end": 3370, "name": "New Feature", "start": 3340, "strand": 1, "type": "misc_feature"}, {"color": "#FFEF86", "end": 3311, "name": "EYFP", "start": 2597, "strand": 1, "type": "CDS"}, {"color": "#FFEF86", "end": 51, "name": "pGEX_3_primer", "start": 28, "strand": -1, "type": "misc_feature"}, {"color": "#d03bff", "end": 1830, "name": "GAL1", "start": 1379, "strand": 1, "type": "misc_feature"}, {"color": "#9EAFD2", "end": 3368, "name": "CYC1_primer", "start": 3349, "strand": -1, "type": "misc_feature"}, {"color": "#9EAFD2", "end": 1173, "name": "HIS3", "start": 510, "strand": 1, "type": "misc_feature"}, {"color": "#FFEF86", "end": 4608, "name": "M13_reverse_primer", "start": 4589, "strand": -1, "type": "misc_feature"}, {"color": "#B1FF67", "end": 3305, "name": "EYFP", "start": 2597, "strand": 1, "type": "gene"}, {"color": "#FFEF86", "end": 4629, "name": "M13_pUC_rev_primer", "start": 4606, "strand": -1, "type": "misc_feature"}, {"color": "#9EAFD2", "end": 3368, "name": "pYESTrp_rev_primer", "start": 3349, "strand": -1, "type": "misc_feature"}, {"color": "#FF9CCD", "end": 3580, "name": "CYC1_terminator", "start": 3340, "strand": 1, "type": "terminator"}, {"color": "#85DAE9", "end": 190, "name": "unused HIS3 5' UTR homology", "start": 184, "strand": 1, "type": "misc_feature"}, {"color": "#B1FF67", "end": 198, "name": "PmeI site", "start": 190, "strand": 1, "type": "misc_feature"}, {"color": "#e14c73", "end": 2306, "name": "IAA17 +202 to +333", "start": 2174, "strand": 1, "type": "misc_feature"}, {"color": "#B1FF67", "end": 4589, "name": "PmeI site", "start": 4581, "strand": 1, "type": "misc_feature"}, {"color": "#0d16ff", "end": 2585, "name": "Double SV40", "start": 2543, "strand": 1, "type": "misc_feature"}, {"color": "#eb66ff", "end": 3336, "name": "T + pBluescript KS linker", "start": 3314, "strand": 1, "type": "misc_feature"}, {"color": "#85DAE9", "end": 2138, "name": "Differs from Gottschling map", "start": 2137, "strand": 1, "type": "misc_feature"}, {"color": "#85DAE9", "end": 1379, "name": "M13 Forward (-47) primer", "start": 1355, "strand": 1, "type": "primer_bind"}, {"color": "#85DAE9", "end": 4581, "name": "HIS3 3'UTR + DED1 homology", "start": 3580, "strand": 1, "type": "misc_feature"}, {"color": "#FFEF86", "end": 1853, "name": "pBluescriptSK_primer", "start": 1836, "strand": 1, "type": "misc_feature"}, {"color": "#85DAE9", "end": 6198, "name": "New Feature", "start": 6174, "strand": 1, "type": "misc_feature"}], "bases": "tcgcgcgtttcggtgatgacggtgaaaacctctgacacatgcagctcccggagacggtcacagcttgtctgtaagcggatgccgggagcagacaagcccgtcagggcgcgtcagcgggtgttggcgggtgtcggggctggcttaactatgcggcatcagagcagattgtactgagagtgcaccataattcGTTTAAACcgttttaagagcttggtgagcgctaggagtcactgccaggtatcgtttgaacacggcattagtcagggaagtcataacacagtcctttcccgcaattttctttttctattactcttggcctcctctagtacactctatatttttttatgcctcggtaatgattttcatttttttttttccacctagcggatgactctttttttttcttagcgattggcattatcacataatgaattatacattatataaagtaatgtgatttcttcgaagaatatactaaaaaatgagcaggcaagataaacgaaggcaaagatgacagagcagaaagccctagtaaagcgtattacaaatgaaaccaagattcagattgcgatctctttaaagggtggtcccctagcgatagagcactcgatcttcccagaaaaagaggcagaagcagtagcagaacaggccacacaatcgcaagtgattaacgtccacacaggtatagggtttctggaccatatgatacatgctctggccaagcattccggctggtcgctaatcgttgagtgcattggtgacttacacatagacgaccatcacaccactgaagactgcgggattgctctcggtcaagcttttaaagaggccctaggggccgtgcgtggagtaaaaaggtttggatcaggatttgcgcctttggatgaggcactttccagagcggtggtagatctttcgaacaggccgtacgcagttgtcgaacttggtttgcaaagggagaaagtaggagatctctcttgcgagatgatcccgcattttcttgaaagctttgcagaggctagcagaattaccctccacgttgattgtctgcgaggcaagaatgatcatcaccgtagtgagagtgcgttcaaggctcttgcggttgccataagagaagccacctcgcccaatggtaccaacgatgttccctccaccaaaggtgttcttatgtaggcgaatttcttatgatttatgatttttattattaaataagttataaaaaaaataagtgtatacaaattttaaagtgactcttaggttttaaaacgaaaattcttattcttgagtaactctttcctgtaggtcaggttgctttctcaggtatagcatgaggtcgctcttattgaccacacctccgccagggttttcccagtcacgacacggattagaagccgccgagCGGGTGACAGCCCTCCGAAGGAAGACTCTCCTCCGTGCGTCCTCGTCTTCACCGGTCGCGTTCCTGAAACGCAGATGTGCCTCGCGCCGCACTGCTCCGAACAATAAAGATTCTACAATACTAGCTTTTATGGTTATGAAGAGGAAAAATTGGCAGTAACCTGGCCCCACAAACCTTCAAATGAACGAATCAAATTAACAACCATAGGATGATAATGCGATTAGTTTTTTAGCCTTATTTCTGGGGTAATTAATCAGCGAAGCGATGATTTTTGATCTATTAACAGATATATAAATGCAAAAACTGCATAACCACTTTAACTAATACTTTCAACATTTTCGGTTTGTATTACTTCTTATTCAAATGTAATAAAAGTATCAACAAAAAATTGTTAATATACCTCTATACTTTAACGTCAAGGAGaaaaaaccCCGGATtctagaactagtggatcTACAAAATGAAGCTACTGTCTTCTATCGAACAAGCATGCGATATTTGCCGACTTAAAAAGCTCAAGTGCTCCAAAGAAAAACCGAAGTGCGCCAAGTGTCTGAAGAACAACTGGGAGTGTCGCTACTCTCCCAAAACCAAAAGGTCTCCGCTGACTAGGGCACATCTGACAGAAGTGGAATCAAGGCTAGAAAGACTGGAACAGCTATTTCTACTGATTTTTCCTCGAGAAGACCTTGACATGATTTTGAAAATGGATTCTTTACAGGATATAAAAGCATTGTTGggtacccctgcagctgcgtcgactctagaggatccaAGTGCTTGTCCTAAAGATCCAGCCAAACCTCCGGCCAAGGCACAAGTTGTGGGATGGCCACCGGTGAGATCATACCGGAAGAACGTGATGGTTTCCTGCCAAAAATCAAGCGGTGGCCCGGAGGCGGCGGCGtcggagctccacttagacggcgaggacgtggcgatggcgcatgccgacgcgctagacgatttcgatctggacatgttgggggacggggattccccgggtccgggatttaccccccacgactccgccccctacggcgctctggatatggccgacttcgagtttgagcagatgtttaccgatgcccttggaattgacgagtacggtgggggatccggttccggaagtggatccggatccCCCAAGAAGAAAAGAAAGGTCCCTAAAAAGAAACGTAAGGTTGGTGCTGGCGCCgtgagcaagggcgaggagctgttcaccggggtggtgcccatcctggtcgagctggacggcgacgtaaacggccacaagttcagcgtgtccggcgagggcgagggcgatgccacctacggcaagctgaccctgaagttcatctgcaccaccggcaagctgcccgtgccctggcccaccctcgtgaccaccttcggctacggcctgcagtgcttcgcccgctaccccgaccacatgaagcagcacgacttcttcaagtccgccatgcccgaaggctacgtccaggagcgcaccatcttcttcaaggacgacggcaactacaagacccgcgccgaggtgaagttcgagggcgacaccctggtgaaccgcatcgagctgaagggcatcgacttcaaggaggacggcaacatcctggggcacaagctggagtacaactacaacagccacaacgtctatatcatggccgacaagcagaagaacggcatcaaggtgaacttcaagatccgccacaacatcgaggacggcagcgtgcagctcgccgaccactaccagcagaacacccccatcggcgacggccccgtgctgctgcccgacaaccactacctgagctaccagtccgccctgagcaaagaccccaacgagaagcgcgatcacatggtcctgctggagttcgtgaccgccgccgggatcactctcggcatggacgagctgtacaagtaatgataccgtcgacctcgagtcatgtaattagttatgtcacgcttacattcacgccctccccccacatccgctctaaccgaaaaggaaggagttagacaacctgaagtctaggtccctatttatttttttatagttatgttagtattaagaacgttatttatatttcaaatttttcttttttttctgtacagacgcgtgtacgcatgtaacattatactgaaaaccttgcttgagaaggttttgggacgctcgaaggctttaatttgTGACACCGATTATTTAAAGCTGCAGCATACGATATATATACATGTGTATATATGTATACCTATGAATGTCAGTAAGTATGTATACGAACAGTATGATACTGAAGATGACAAGGTAATGCATCATTCTATACGTGTCATTCTGAACGAGGCGCGCTTTCCTTTTTTCTTTTTGCTTTTTCTTTTTTTTTCTCTTGAACTCGAGAAAAAAAATATAAAAGAGATGGAGGAACGGGAAAAAGTTAGTTGTGGTGATAGGTGGCAAGTGGTATTCCGTAAGAACAACAAGAAAAGCATTTCATATTATGGCTGAACTGAGCGAACAAGTGCAAAATTTAAGCATCAACGACAACAACGAGAATGGTTATGTTCCTCCTCACTTAAGAGGAAAACCAAGAAGTGCCAGAAATAACAGTAGCAACTACAATAACAACAACGGCGGCTACAACGGTGGCCGTGGCGGTGGCAGCTTCTTTAGCAACAACCGTCGTGGTGGTTACGGCAACGGTGGTTTCTTCGGTGGAAACAACGGTGGCAGCAGATCTAACGGCCGTTCTGGTGGTAGATGGATCGATGGCAAACATGTCCCAGCTCCAAGAAACGAAAAGGCCGAGATCGCCATATTTGGTGTCCCCGAGGATCCAAATTTCCAATCTTCTGGTATTAACTTCGATAACTACGATGATATTCCAGTGGACGCCTCTGGTAAGGATGTTCCTGAACCAATCACAGAATTTACCTCACCTCCATTGGACGGATTGTTATTGGAAAACATCAAATTGGCCCGTTTCACCAAGCCAACACCTGTGCAAAAATACTCCGTCCCTATCGTTGCCAACGGCAGAGATTTGATGGCCTGTGCGCAGACCGGTTCTGGTAAGACTGGTGGGTTTTTATTCCCAGTGTTGTCCGAATCATTTAAGACTGGACCATCTCCTCAACCAGAGTCTCAAGGCTCCTTTTACCAAAGAAAGGCCTACCCAACTGCTGTCATTATGGCTCCAGTTTAAACcatggtcatagctgtttcctgtgtgaaattgttatccgctcacaattccacacaacataggagccggaagcataaagtgtaaagcctggggtgcctaatgagtgaggtaactcacattaattgcgttgcgctcactgcccgctttccagtcgggaaacctgtcgtgccagctgcattaatgaatcggccaacgcgcggggagaggcggtttgcgtattgggcgctcttccgcttcctcgctcactgactcgctgcgctcggtcgttcggctgcggcgagcggtatcagctcactcaaaggcggtaatacggttatccacagaatcaggggataacgcaggaaagaacatgtgagcaaaaggccagcaaaaggccaggaaccgtaaaaaggccgcgttgctggcgtttttccataggctcggcccccctgacgagcatcacaaaaatcgacgctcaagtcagaggtggcgaaacccgacaggactataaagataccaggcgttcccccctggaagctccctcgtgcgctctcctgttccgaccctgccgcttaccggatacctgtccgcctttctcccttcgggaagcgtggcgctttctcaatgctcacgctgtaggtatctcagttcggtgtaggtcgttcgctccaagctgggctgtgtgcacgaaccccccgttcagcccgaccgctgcgccttatccggtaactatcgtcttgagtccaacccggtaagacacgacttatcgccactggcagcagccactggtaacaggattagcagagcgaggtatgtaggcggtgctacagagttcttgaagtggtggcctaactacggctacactagaaggacagtatttggtatctgcgctctgctgaagccagttaccttcggaaaaagagttggtagctcttgatccggcaaacaaaccaccgctggtagcggtggtttttttgtttgcaagcagcagattacgcgcagaaaaaaaggatctcaagaagatcctttgatcttttctacggggtctgacgctcagtggaacgaaaactcacgttaagggattttggtcatgagattatcaaaaaggatcttcacctagatccttttaaattaaaaatgaagttttaaatcaatctaaagtatatatgagtaaacttggtctgacagttaccaatgcttaatcagtgaggcacctatctcagcgatctgtctatttcgttcatccatagttgcctgactgcccgtcgtgtagataactacgatacgggagggcttaccatctggccccagtgctgcaatgataccgcgagacccacgctcaccggctccagatttatcagcaataaaccagccagccggaagggccgagcgcagaagtggtcctgcaactttatccgcctccatccagtctattaattgttgccgggaagctagagtaagtagttcgccagttaatagtttgcgcaacgttgttgccattgctacaggcatcgtggtgtcacgctcgtcgtttggtatggcttcattcagctccggttcccaacgatcaaggcgagttacatgatcccccatgttgtgaaaaaaagcggttagctccttcggtcctccgatcgttgtcagaagtaagttggccgcagtgttatcactcatggttatggcagcactgcataattctcttactgtcatgccatccgtaagatgcttttctgtgactggtgagtactcaaccaagtcattctgagaatagtgtatgcggcgaccgagttgctcttgcccggcgtcaatacgggataataccgcgccacatagcagaactttaaaagtgctcatcattggaaaacgttcttcggggcgaaaactctcaaggatcttaccgctgttgagatccagttcgatgtaacccactcgtgcacccaactgatcttcagcatcttttactttcaccagcgtttctgggtgagcaaaaacaggaaggcaaaatgccgcaaaaaagggaataagggcgacacggaaatgttgaatactcatactcttcctttttcaatattattgaagcatttatcagggttattgtctcatgagcggatacatatttgaatgtatttagaaaaataaacaaataggggttccgcgcacatttccccgaaaagtgccacctgacgtcttattatcatgacattaacctataaaaataggcgtatcacgaggccctttcgtc", "circular": true, "color": "#F7977A", "createdAt": "2014-09-30T23:20:34.826621+00:00", "creator": {"avatarUrl": "https://main-benchling.s3.amazonaws.com/a/uTfMphp2waolQNTz7pCpuIyPuAS1VLgVRlvMBwYS/ent_A7BlnCcJTU-sunshineyyy-128.png", "handle": "sunshineyyy", "id": "ent_A7BlnCcJTU", "name": "Yaoyu Yang"}, "description": "pGAL1 drive GAVNY with pBluescript between them. pGAL1 seems can not be activated in experimental tests.", "editURL": "/sunshineyyy/f/pP6d50rJn1-plasmids/seq-2xGw2yCj-pgph8-pgal1-gavny/edit", "folder": {"id": "lib_pP6d50rJn1", "name": "Plasmids"}, "id": "seq_2xGw2yCj", "length": 6805, "modifiedAt": "2014-10-01T17:50:03.523010+00:00", "name": "pGPH8-pGAL1-GAVNY", "notes": [{"created_at": "2015-03-31T06:38:38.387810+00:00", "creator": "ent_A7BlnCcJTU", "text": "pGAL1 drive GAVNY with pBluescript between them. pGAL1 seems can not be activated in experimental tests."}], "primers": [{"bases": "CTGCTTTTTTGTACAAACTTGtgatgggggatccactagttctagaATCCGGggtttttt", "bind_position": 1822, "color": "#D6B295", "created_at": "2014-10-01T17:50:03.357497+00:00", "end": 1853, "name": "GAL1_rev_pBlueScriptSK_attB1_flk", "overhang_length": 29, "start": 1822, "strand": -1}, {"bases": "gttcgccagttaatagtttgcgcaacg", "bind_position": 6055, "color": "#FAAC61", "created_at": "2014-09-30T23:46:50.675619+00:00", "end": 6056, "name": "AmpR_F(pMOD)", "overhang_length": 0, "start": 6029, "strand": 1}, {"bases": "attagttatgtcacgcttacattcacgccc", "bind_position": 3369, "color": "#D6B295", "created_at": "2014-09-30T23:46:16.420505+00:00", "end": 3370, "name": "TCYC1_F", "overhang_length": 0, "start": 3340, "strand": 1}, {"bases": "atcggaggaccgaaggagctaacc", "bind_position": 6174, "color": "#75C6A9", "created_at": "2014-09-30T23:47:00.575878+00:00", "end": 6198, "name": "AmpR_R(pMOD)", "overhang_length": 0, "start": 6174, "strand": -1}], "registryId": null, "tagSchema": null, "tags": []}
+{
+  "aliases": [],
+  "annotations": [
+    {
+      "color": "#B1FF67",
+      "end": 2137,
+      "name": "GAL4(1-93) DBD",
+      "start": 1859,
+      "strand": 1,
+      "type": "misc_feature"
+    },
+    {
+      "color": "#FF9CCD",
+      "end": 5600,
+      "name": "pBR322_origin",
+      "start": 4980,
+      "strand": -1,
+      "type": "rep_origin"
+    },
+    {
+      "color": "#F58A5E",
+      "end": 2405,
+      "name": "Differs from Gottschling Map",
+      "start": 2404,
+      "strand": 1,
+      "type": "misc_feature"
+    },
+    {
+      "color": "#85DAE9",
+      "end": 3314,
+      "name": "Stop Codon",
+      "start": 3311,
+      "strand": 1,
+      "type": "misc_feature"
+    },
+    {
+      "color": "#B1FF67",
+      "end": 6615,
+      "name": "Ampicillin",
+      "start": 5754,
+      "strand": -1,
+      "type": "gene"
+    },
+    {
+      "color": "#85DAE9",
+      "end": 6056,
+      "name": "New Feature",
+      "start": 6029,
+      "strand": 1,
+      "type": "misc_feature"
+    },
+    {
+      "color": "#85DAE9",
+      "end": 2513,
+      "name": "HSV1 VP16",
+      "start": 2309,
+      "strand": 1,
+      "type": "misc_feature"
+    },
+    {
+      "color": "#B1FF67",
+      "end": 2543,
+      "name": "L2",
+      "start": 2513,
+      "strand": 1,
+      "type": "misc_feature"
+    },
+    {
+      "color": "#9EAFD2",
+      "end": 2661,
+      "name": "EGFP_N_primer",
+      "start": 2639,
+      "strand": -1,
+      "type": "misc_feature"
+    },
+    {
+      "color": "#85DAE9",
+      "end": 510,
+      "name": "HIS3 5' UTR",
+      "start": 198,
+      "strand": 1,
+      "type": "misc_feature"
+    },
+    {
+      "color": "#9EAFD2",
+      "end": 3269,
+      "name": "EGFP_C_primer",
+      "start": 3247,
+      "strand": 1,
+      "type": "misc_feature"
+    },
+    {
+      "color": "#602ef3",
+      "end": 6685,
+      "name": "AmpR_promoter",
+      "start": 6656,
+      "strand": -1,
+      "type": "promoter"
+    },
+    {
+      "color": "#FFEF86",
+      "end": 6615,
+      "name": "Ampicillin",
+      "start": 5754,
+      "strand": -1,
+      "type": "CDS"
+    },
+    {
+      "color": "#FFEF86",
+      "end": 3311,
+      "name": "ORF frame 2",
+      "start": 2597,
+      "strand": -1,
+      "type": "CDS"
+    },
+    {
+      "color": "#85DAE9",
+      "end": 1355,
+      "name": "ADH1 Terminator",
+      "start": 1173,
+      "strand": 1,
+      "type": "terminator"
+    },
+    {
+      "color": "#6c59ff",
+      "end": 2309,
+      "name": "Extra serine, shared by VP16/hER",
+      "start": 2306,
+      "strand": 1,
+      "type": "misc_feature"
+    },
+    {
+      "color": "#85DAE9",
+      "end": 3370,
+      "name": "New Feature",
+      "start": 3340,
+      "strand": 1,
+      "type": "misc_feature"
+    },
+    {
+      "color": "#FFEF86",
+      "end": 3311,
+      "name": "EYFP",
+      "start": 2597,
+      "strand": 1,
+      "type": "CDS"
+    },
+    {
+      "color": "#FFEF86",
+      "end": 51,
+      "name": "pGEX_3_primer",
+      "start": 28,
+      "strand": -1,
+      "type": "misc_feature"
+    },
+    {
+      "color": "#d03bff",
+      "end": 1830,
+      "name": "GAL1",
+      "start": 1379,
+      "strand": 1,
+      "type": "misc_feature"
+    },
+    {
+      "color": "#9EAFD2",
+      "end": 3368,
+      "name": "CYC1_primer",
+      "start": 3349,
+      "strand": -1,
+      "type": "misc_feature"
+    },
+    {
+      "color": "#9EAFD2",
+      "end": 1173,
+      "name": "HIS3",
+      "start": 510,
+      "strand": 1,
+      "type": "misc_feature"
+    },
+    {
+      "color": "#FFEF86",
+      "end": 4608,
+      "name": "M13_reverse_primer",
+      "start": 4589,
+      "strand": -1,
+      "type": "misc_feature"
+    },
+    {
+      "color": "#B1FF67",
+      "end": 3305,
+      "name": "EYFP",
+      "start": 2597,
+      "strand": 1,
+      "type": "gene"
+    },
+    {
+      "color": "#FFEF86",
+      "end": 4629,
+      "name": "M13_pUC_rev_primer",
+      "start": 4606,
+      "strand": -1,
+      "type": "misc_feature"
+    },
+    {
+      "color": "#9EAFD2",
+      "end": 3368,
+      "name": "pYESTrp_rev_primer",
+      "start": 3349,
+      "strand": -1,
+      "type": "misc_feature"
+    },
+    {
+      "color": "#FF9CCD",
+      "end": 3580,
+      "name": "CYC1_terminator",
+      "start": 3340,
+      "strand": 1,
+      "type": "terminator"
+    },
+    {
+      "color": "#85DAE9",
+      "end": 190,
+      "name": "unused HIS3 5' UTR homology",
+      "start": 184,
+      "strand": 1,
+      "type": "misc_feature"
+    },
+    {
+      "color": "#B1FF67",
+      "end": 198,
+      "name": "PmeI site",
+      "start": 190,
+      "strand": 1,
+      "type": "misc_feature"
+    },
+    {
+      "color": "#e14c73",
+      "end": 2306,
+      "name": "IAA17 +202 to +333",
+      "start": 2174,
+      "strand": 1,
+      "type": "misc_feature"
+    },
+    {
+      "color": "#B1FF67",
+      "end": 4589,
+      "name": "PmeI site",
+      "start": 4581,
+      "strand": 1,
+      "type": "misc_feature"
+    },
+    {
+      "color": "#0d16ff",
+      "end": 2585,
+      "name": "Double SV40",
+      "start": 2543,
+      "strand": 1,
+      "type": "misc_feature"
+    },
+    {
+      "color": "#eb66ff",
+      "end": 3336,
+      "name": "T + pBluescript KS linker",
+      "start": 3314,
+      "strand": 1,
+      "type": "misc_feature"
+    },
+    {
+      "color": "#85DAE9",
+      "end": 2138,
+      "name": "Differs from Gottschling map",
+      "start": 2137,
+      "strand": 1,
+      "type": "misc_feature"
+    },
+    {
+      "color": "#85DAE9",
+      "end": 1379,
+      "name": "M13 Forward (-47) primer",
+      "start": 1355,
+      "strand": 1,
+      "type": "primer_bind"
+    },
+    {
+      "color": "#85DAE9",
+      "end": 4581,
+      "name": "HIS3 3'UTR + DED1 homology",
+      "start": 3580,
+      "strand": 1,
+      "type": "misc_feature"
+    },
+    {
+      "color": "#FFEF86",
+      "end": 1853,
+      "name": "pBluescriptSK_primer",
+      "start": 1836,
+      "strand": 1,
+      "type": "misc_feature"
+    },
+    {
+      "color": "#85DAE9",
+      "end": 6198,
+      "name": "New Feature",
+      "start": 6174,
+      "strand": 1,
+      "type": "misc_feature"
+    }
+  ],
+  "bases": "tcgcgcgtttcggtgatgacggtgaaaacctctgacacatgcagctcccggagacggtcacagcttgtctgtaagcggatgccgggagcagacaagcccgtcagggcgcgtcagcgggtgttggcgggtgtcggggctggcttaactatgcggcatcagagcagattgtactgagagtgcaccataattcGTTTAAACcgttttaagagcttggtgagcgctaggagtcactgccaggtatcgtttgaacacggcattagtcagggaagtcataacacagtcctttcccgcaattttctttttctattactcttggcctcctctagtacactctatatttttttatgcctcggtaatgattttcatttttttttttccacctagcggatgactctttttttttcttagcgattggcattatcacataatgaattatacattatataaagtaatgtgatttcttcgaagaatatactaaaaaatgagcaggcaagataaacgaaggcaaagatgacagagcagaaagccctagtaaagcgtattacaaatgaaaccaagattcagattgcgatctctttaaagggtggtcccctagcgatagagcactcgatcttcccagaaaaagaggcagaagcagtagcagaacaggccacacaatcgcaagtgattaacgtccacacaggtatagggtttctggaccatatgatacatgctctggccaagcattccggctggtcgctaatcgttgagtgcattggtgacttacacatagacgaccatcacaccactgaagactgcgggattgctctcggtcaagcttttaaagaggccctaggggccgtgcgtggagtaaaaaggtttggatcaggatttgcgcctttggatgaggcactttccagagcggtggtagatctttcgaacaggccgtacgcagttgtcgaacttggtttgcaaagggagaaagtaggagatctctcttgcgagatgatcccgcattttcttgaaagctttgcagaggctagcagaattaccctccacgttgattgtctgcgaggcaagaatgatcatcaccgtagtgagagtgcgttcaaggctcttgcggttgccataagagaagccacctcgcccaatggtaccaacgatgttccctccaccaaaggtgttcttatgtaggcgaatttcttatgatttatgatttttattattaaataagttataaaaaaaataagtgtatacaaattttaaagtgactcttaggttttaaaacgaaaattcttattcttgagtaactctttcctgtaggtcaggttgctttctcaggtatagcatgaggtcgctcttattgaccacacctccgccagggttttcccagtcacgacacggattagaagccgccgagCGGGTGACAGCCCTCCGAAGGAAGACTCTCCTCCGTGCGTCCTCGTCTTCACCGGTCGCGTTCCTGAAACGCAGATGTGCCTCGCGCCGCACTGCTCCGAACAATAAAGATTCTACAATACTAGCTTTTATGGTTATGAAGAGGAAAAATTGGCAGTAACCTGGCCCCACAAACCTTCAAATGAACGAATCAAATTAACAACCATAGGATGATAATGCGATTAGTTTTTTAGCCTTATTTCTGGGGTAATTAATCAGCGAAGCGATGATTTTTGATCTATTAACAGATATATAAATGCAAAAACTGCATAACCACTTTAACTAATACTTTCAACATTTTCGGTTTGTATTACTTCTTATTCAAATGTAATAAAAGTATCAACAAAAAATTGTTAATATACCTCTATACTTTAACGTCAAGGAGaaaaaaccCCGGATtctagaactagtggatcTACAAAATGAAGCTACTGTCTTCTATCGAACAAGCATGCGATATTTGCCGACTTAAAAAGCTCAAGTGCTCCAAAGAAAAACCGAAGTGCGCCAAGTGTCTGAAGAACAACTGGGAGTGTCGCTACTCTCCCAAAACCAAAAGGTCTCCGCTGACTAGGGCACATCTGACAGAAGTGGAATCAAGGCTAGAAAGACTGGAACAGCTATTTCTACTGATTTTTCCTCGAGAAGACCTTGACATGATTTTGAAAATGGATTCTTTACAGGATATAAAAGCATTGTTGggtacccctgcagctgcgtcgactctagaggatccaAGTGCTTGTCCTAAAGATCCAGCCAAACCTCCGGCCAAGGCACAAGTTGTGGGATGGCCACCGGTGAGATCATACCGGAAGAACGTGATGGTTTCCTGCCAAAAATCAAGCGGTGGCCCGGAGGCGGCGGCGtcggagctccacttagacggcgaggacgtggcgatggcgcatgccgacgcgctagacgatttcgatctggacatgttgggggacggggattccccgggtccgggatttaccccccacgactccgccccctacggcgctctggatatggccgacttcgagtttgagcagatgtttaccgatgcccttggaattgacgagtacggtgggggatccggttccggaagtggatccggatccCCCAAGAAGAAAAGAAAGGTCCCTAAAAAGAAACGTAAGGTTGGTGCTGGCGCCgtgagcaagggcgaggagctgttcaccggggtggtgcccatcctggtcgagctggacggcgacgtaaacggccacaagttcagcgtgtccggcgagggcgagggcgatgccacctacggcaagctgaccctgaagttcatctgcaccaccggcaagctgcccgtgccctggcccaccctcgtgaccaccttcggctacggcctgcagtgcttcgcccgctaccccgaccacatgaagcagcacgacttcttcaagtccgccatgcccgaaggctacgtccaggagcgcaccatcttcttcaaggacgacggcaactacaagacccgcgccgaggtgaagttcgagggcgacaccctggtgaaccgcatcgagctgaagggcatcgacttcaaggaggacggcaacatcctggggcacaagctggagtacaactacaacagccacaacgtctatatcatggccgacaagcagaagaacggcatcaaggtgaacttcaagatccgccacaacatcgaggacggcagcgtgcagctcgccgaccactaccagcagaacacccccatcggcgacggccccgtgctgctgcccgacaaccactacctgagctaccagtccgccctgagcaaagaccccaacgagaagcgcgatcacatggtcctgctggagttcgtgaccgccgccgggatcactctcggcatggacgagctgtacaagtaatgataccgtcgacctcgagtcatgtaattagttatgtcacgcttacattcacgccctccccccacatccgctctaaccgaaaaggaaggagttagacaacctgaagtctaggtccctatttatttttttatagttatgttagtattaagaacgttatttatatttcaaatttttcttttttttctgtacagacgcgtgtacgcatgtaacattatactgaaaaccttgcttgagaaggttttgggacgctcgaaggctttaatttgTGACACCGATTATTTAAAGCTGCAGCATACGATATATATACATGTGTATATATGTATACCTATGAATGTCAGTAAGTATGTATACGAACAGTATGATACTGAAGATGACAAGGTAATGCATCATTCTATACGTGTCATTCTGAACGAGGCGCGCTTTCCTTTTTTCTTTTTGCTTTTTCTTTTTTTTTCTCTTGAACTCGAGAAAAAAAATATAAAAGAGATGGAGGAACGGGAAAAAGTTAGTTGTGGTGATAGGTGGCAAGTGGTATTCCGTAAGAACAACAAGAAAAGCATTTCATATTATGGCTGAACTGAGCGAACAAGTGCAAAATTTAAGCATCAACGACAACAACGAGAATGGTTATGTTCCTCCTCACTTAAGAGGAAAACCAAGAAGTGCCAGAAATAACAGTAGCAACTACAATAACAACAACGGCGGCTACAACGGTGGCCGTGGCGGTGGCAGCTTCTTTAGCAACAACCGTCGTGGTGGTTACGGCAACGGTGGTTTCTTCGGTGGAAACAACGGTGGCAGCAGATCTAACGGCCGTTCTGGTGGTAGATGGATCGATGGCAAACATGTCCCAGCTCCAAGAAACGAAAAGGCCGAGATCGCCATATTTGGTGTCCCCGAGGATCCAAATTTCCAATCTTCTGGTATTAACTTCGATAACTACGATGATATTCCAGTGGACGCCTCTGGTAAGGATGTTCCTGAACCAATCACAGAATTTACCTCACCTCCATTGGACGGATTGTTATTGGAAAACATCAAATTGGCCCGTTTCACCAAGCCAACACCTGTGCAAAAATACTCCGTCCCTATCGTTGCCAACGGCAGAGATTTGATGGCCTGTGCGCAGACCGGTTCTGGTAAGACTGGTGGGTTTTTATTCCCAGTGTTGTCCGAATCATTTAAGACTGGACCATCTCCTCAACCAGAGTCTCAAGGCTCCTTTTACCAAAGAAAGGCCTACCCAACTGCTGTCATTATGGCTCCAGTTTAAACcatggtcatagctgtttcctgtgtgaaattgttatccgctcacaattccacacaacataggagccggaagcataaagtgtaaagcctggggtgcctaatgagtgaggtaactcacattaattgcgttgcgctcactgcccgctttccagtcgggaaacctgtcgtgccagctgcattaatgaatcggccaacgcgcggggagaggcggtttgcgtattgggcgctcttccgcttcctcgctcactgactcgctgcgctcggtcgttcggctgcggcgagcggtatcagctcactcaaaggcggtaatacggttatccacagaatcaggggataacgcaggaaagaacatgtgagcaaaaggccagcaaaaggccaggaaccgtaaaaaggccgcgttgctggcgtttttccataggctcggcccccctgacgagcatcacaaaaatcgacgctcaagtcagaggtggcgaaacccgacaggactataaagataccaggcgttcccccctggaagctccctcgtgcgctctcctgttccgaccctgccgcttaccggatacctgtccgcctttctcccttcgggaagcgtggcgctttctcaatgctcacgctgtaggtatctcagttcggtgtaggtcgttcgctccaagctgggctgtgtgcacgaaccccccgttcagcccgaccgctgcgccttatccggtaactatcgtcttgagtccaacccggtaagacacgacttatcgccactggcagcagccactggtaacaggattagcagagcgaggtatgtaggcggtgctacagagttcttgaagtggtggcctaactacggctacactagaaggacagtatttggtatctgcgctctgctgaagccagttaccttcggaaaaagagttggtagctcttgatccggcaaacaaaccaccgctggtagcggtggtttttttgtttgcaagcagcagattacgcgcagaaaaaaaggatctcaagaagatcctttgatcttttctacggggtctgacgctcagtggaacgaaaactcacgttaagggattttggtcatgagattatcaaaaaggatcttcacctagatccttttaaattaaaaatgaagttttaaatcaatctaaagtatatatgagtaaacttggtctgacagttaccaatgcttaatcagtgaggcacctatctcagcgatctgtctatttcgttcatccatagttgcctgactgcccgtcgtgtagataactacgatacgggagggcttaccatctggccccagtgctgcaatgataccgcgagacccacgctcaccggctccagatttatcagcaataaaccagccagccggaagggccgagcgcagaagtggtcctgcaactttatccgcctccatccagtctattaattgttgccgggaagctagagtaagtagttcgccagttaatagtttgcgcaacgttgttgccattgctacaggcatcgtggtgtcacgctcgtcgtttggtatggcttcattcagctccggttcccaacgatcaaggcgagttacatgatcccccatgttgtgaaaaaaagcggttagctccttcggtcctccgatcgttgtcagaagtaagttggccgcagtgttatcactcatggttatggcagcactgcataattctcttactgtcatgccatccgtaagatgcttttctgtgactggtgagtactcaaccaagtcattctgagaatagtgtatgcggcgaccgagttgctcttgcccggcgtcaatacgggataataccgcgccacatagcagaactttaaaagtgctcatcattggaaaacgttcttcggggcgaaaactctcaaggatcttaccgctgttgagatccagttcgatgtaacccactcgtgcacccaactgatcttcagcatcttttactttcaccagcgtttctgggtgagcaaaaacaggaaggcaaaatgccgcaaaaaagggaataagggcgacacggaaatgttgaatactcatactcttcctttttcaatattattgaagcatttatcagggttattgtctcatgagcggatacatatttgaatgtatttagaaaaataaacaaataggggttccgcgcacatttccccgaaaagtgccacctgacgtcttattatcatgacattaacctataaaaataggcgtatcacgaggccctttcgtc",
+  "circular": true,
+  "color": "#F7977A",
+  "createdAt": "2014-09-30T23:20:34.826621+00:00",
+  "creator": {
+    "avatarUrl": "https://main-benchling.s3.amazonaws.com/a/uTfMphp2waolQNTz7pCpuIyPuAS1VLgVRlvMBwYS/ent_A7BlnCcJTU-sunshineyyy-128.png",
+    "handle": "sunshineyyy",
+    "id": "ent_A7BlnCcJTU",
+    "name": "Yaoyu Yang"
+  },
+  "description": "pGAL1 drive GAVNY with pBluescript between them. pGAL1 seems can not be activated in experimental tests.",
+  "editURL": "/sunshineyyy/f/pP6d50rJn1-plasmids/seq-2xGw2yCj-pgph8-pgal1-gavny/edit",
+  "folder": {
+    "id": "lib_pP6d50rJn1",
+    "name": "Plasmids"
+  },
+  "id": "seq_2xGw2yCj",
+  "length": 6805,
+  "modifiedAt": "2014-10-01T17:50:03.523010+00:00",
+  "name": "pGPH8-pGAL1-GAVNY",
+  "notes": [
+    {
+      "created_at": "2015-03-31T06:38:38.387810+00:00",
+      "creator": "ent_A7BlnCcJTU",
+      "text": "pGAL1 drive GAVNY with pBluescript between them. pGAL1 seems can not be activated in experimental tests."
+    }
+  ],
+  "primers": [
+    {
+      "bases": "CTGCTTTTTTGTACAAACTTGtgatgggggatccactagttctagaATCCGGggtttttt",
+      "bind_position": 1822,
+      "color": "#D6B295",
+      "created_at": "2014-10-01T17:50:03.357497+00:00",
+      "end": 1853,
+      "name": "GAL1_rev_pBlueScriptSK_attB1_flk",
+      "overhang_length": 29,
+      "start": 1822,
+      "strand": -1
+    },
+    {
+      "bases": "gttcgccagttaatagtttgcgcaacg",
+      "bind_position": 6055,
+      "color": "#FAAC61",
+      "created_at": "2014-09-30T23:46:50.675619+00:00",
+      "end": 6056,
+      "name": "AmpR_F(pMOD)",
+      "overhang_length": 0,
+      "start": 6029,
+      "strand": 1
+    },
+    {
+      "bases": "attagttatgtcacgcttacattcacgccc",
+      "bind_position": 3369,
+      "color": "#D6B295",
+      "created_at": "2014-09-30T23:46:16.420505+00:00",
+      "end": 3370,
+      "name": "TCYC1_F",
+      "overhang_length": 0,
+      "start": 3340,
+      "strand": 1
+    },
+    {
+      "bases": "atcggaggaccgaaggagctaacc",
+      "bind_position": 6174,
+      "color": "#75C6A9",
+      "created_at": "2014-09-30T23:47:00.575878+00:00",
+      "end": 6198,
+      "name": "AmpR_R(pMOD)",
+      "overhang_length": 0,
+      "start": 6174,
+      "strand": -1
+    }
+  ],
+  "registryId": null,
+  "tagSchema": null,
+  "tags": []
+}

@@ -1,7 +1,6 @@
 import pytest
 from benchlingapi import BenchlingAPI
-import os
-import json
+import json, os
 
 @pytest.fixture
 def config(scope="module"):
