@@ -16,10 +16,6 @@ class BenchlingLoginError(Exception):
     """Errors for incorrect login credentials"""
 
 
-class AquariumLoginError(Exception):
-    """Errors for incorrect Aquarium login credentials"""
-
-
 class RequestDecorator(object):
     """
     Wraps a function to raise error with unexpected request status codes
